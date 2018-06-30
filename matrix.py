@@ -153,13 +153,11 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
-        matrixSum = []
+        grid = zeroes(self.h, self.w)
         for i in range(self.h):
-            new_row = [] # empty row for now
             for j in range(self.w):
-                new_row.append(self[i][j] + other[i][j])
-            matrixSum.append(new_row)
-        return Matrix(matrixSum)
+                grid[i][j] = self.g[i][j] + other.g[i][j]
+        return grid
 
     def __neg__(self):
         """
@@ -176,13 +174,11 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
-        negative_Matrix = []
-        for i in range(self.h):
-            row = [] #clear contents of row
-            for j in range(self.w):
-                row.append(-self[i][j])
-            negative_Matrix.append(row)
-        return Matrix(negative_Matrix)
+        grid = zeroes(self.h, self.w)
+        for r in range(self.h):
+            for c in range(self.w):
+                grid[r][c] = self.g[r][c]*-1.0
+        return grid
 
     def __sub__(self, other):
         """
@@ -226,11 +222,7 @@ class Matrix(object):
             #   
             # TODO - your code here
             #
-            matrix = []
-            for i in range(self.h):
-                row = []
-                for j in range(self.w):
-                    row.append(other*self[i][j])
-                matrix.append(row)
-            return Matrix(matrix)
+            temp = [[other * self.g[i][j] for j in range(self.w)] for i in range(self.h)]
+            return Matrix(temp)
+            
             
