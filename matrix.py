@@ -1,269 +1,236 @@
-<!DOCTYPE HTML>
-<html>
+import math
+from math import sqrt
+import numbers
 
-<head>
-    <meta charset="utf-8">
+def zeroes(height, width):
+        """
+        Creates a matrix of zeroes.
+        """
+        g = [[0.0 for _ in range(width)] for __ in range(height)]
+        return Matrix(g)
 
-    <title>matrix.py (editing)</title>
-    <link id="favicon" rel="shortcut icon" type="image/x-icon" href="/static/base/images/favicon-file.ico?v=e2776a7f45692c839d6eea7d7ff6f3b2">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="/static/components/jquery-ui/themes/smoothness/jquery-ui.min.css?v=9b2c8d3489227115310662a343fce11c" type="text/css" />
-    <link rel="stylesheet" href="/static/components/jquery-typeahead/dist/jquery.typeahead.min.css?v=7afb461de36accb1aa133a1710f5bc56" type="text/css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    
-<link rel="stylesheet" href="/static/components/codemirror/lib/codemirror.css?v=ae81317fa2b3a745892c83985827d41b">
-<link rel="stylesheet" href="/static/components/codemirror/addon/dialog/dialog.css?v=c89dce10b44d2882a024e7befc2b63f5">
+def identity(n):
+        """
+        Creates a n x n identity matrix.
+        """
+        I = zeroes(n, n)
+        for i in range(n):
+            I.g[i][i] = 1.0
+        return I
 
-    <link rel="stylesheet" href="/static/style/style.min.css?v=47782e517c98a53adb514cbefb4528f2" type="text/css"/>
-    
+def dot_product(vector_one, vector_two):
+    product_vector = []
+    for i in range(len(vector_one)):
+        product_vector.append(vector_one[i] * vector_two[i])
+    return sum(product_vector)
 
-    <link rel="stylesheet" href="/custom/custom.css" type="text/css" />
-    <script src="/static/components/es6-promise/promise.min.js?v=f004a16cb856e0ff11781d01ec5ca8fe" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/components/preact/index.js?v=00a2fac73c670ce39ac53d26640eb542" type="text/javascript"></script>
-    <script src="/static/components/proptypes/index.js?v=c40890eb04df9811fcc4d47e53a29604" type="text/javascript"></script>
-    <script src="/static/components/preact-compat/index.js?v=f865e990e65ad27e3a2601d8adb48db1" type="text/javascript"></script>
-    <script src="/static/components/requirejs/require.js?v=6da8be361b9ee26c5e721e76c6d4afce" type="text/javascript" charset="utf-8"></script>
-    <script>
-      require.config({
-          
-          urlArgs: "v=20180630140956",
-          
-          baseUrl: '/static/',
-          paths: {
-            'auth/js/main': 'auth/js/main.min',
-            custom : '/custom',
-            nbextensions : '/nbextensions',
-            kernelspecs : '/kernelspecs',
-            underscore : 'components/underscore/underscore-min',
-            backbone : 'components/backbone/backbone-min',
-            jed: 'components/jed/jed',
-            jquery: 'components/jquery/jquery.min',
-            json: 'components/requirejs-plugins/src/json',
-            text: 'components/requirejs-text/text',
-            bootstrap: 'components/bootstrap/js/bootstrap.min',
-            bootstraptour: 'components/bootstrap-tour/build/js/bootstrap-tour.min',
-            'jquery-ui': 'components/jquery-ui/ui/minified/jquery-ui.min',
-            moment: 'components/moment/min/moment-with-locales',
-            codemirror: 'components/codemirror',
-            termjs: 'components/xterm.js/dist/xterm',
-            typeahead: 'components/jquery-typeahead/dist/jquery.typeahead.min',
-          },
-          map: { // for backward compatibility
-              "*": {
-                  "jqueryui": "jquery-ui",
-              }
-          },
-          shim: {
-            typeahead: {
-              deps: ["jquery"],
-              exports: "typeahead"
-            },
-            underscore: {
-              exports: '_'
-            },
-            backbone: {
-              deps: ["underscore", "jquery"],
-              exports: "Backbone"
-            },
-            bootstrap: {
-              deps: ["jquery"],
-              exports: "bootstrap"
-            },
-            bootstraptour: {
-              deps: ["bootstrap"],
-              exports: "Tour"
-            },
-            "jquery-ui": {
-              deps: ["jquery"],
-              exports: "$"
-            }
-          },
-          waitSeconds: 30,
-      });
+class Matrix(object):
 
-      require.config({
-          map: {
-              '*':{
-                'contents': 'services/contents',
-              }
-          }
-      });
+    # Constructor
+    def __init__(self, grid):
+        self.g = grid
+        self.h = len(grid)
+        self.w = len(grid[0])
 
-      // error-catching custom.js shim.
-      define("custom", function (require, exports, module) {
-          try {
-              var custom = require('custom/custom');
-              console.debug('loaded custom.js');
-              return custom;
-          } catch (e) {
-              console.error("error loading custom.js", e);
-              return {};
-          }
-      })
-
-    document.nbjs_translations = {"domain": "nbjs", "locale_data": {"nbjs": {"": {"domain": "nbjs"}}}};
-    </script>
-
-    
-    
-
-</head>
-
-<body class="edit_app "
+    #
+    # Primary matrix math methods
+    #############################
  
-data-base-url="/"
-data-file-path="matrix.py"
+    def determinant(self):
+        """
+        Calculates the determinant of a 1x1 or 2x2 matrix.
+        """
+        if not self.is_square():
+            print(ValueError, "Cannot calculate determinant of non-square matrix.")
+        if self.h > 2:
+            print(NotImplementedError, "Calculating determinant not implemented for matrices largerer than 2x2.")
+        
+        # TODO - your code here
+        if self.h == 1:
+            return self[0][0]
+        elif self.h == 2:
+            a = self[0][0]
+            b = self[0][1]
+            c = self[1][0]
+            d = self[1][1]
+            return a*d - b*c
+        else:
+            return
 
-  
- 
+    def trace(self):
+        """
+        Calculates the trace of a matrix (sum of diagonal entries).
+        """
+        '''if not self.is_square():
+            print(ValueError, "Cannot calculate the trace of a non-square matrix.")
+'''
+        trace = 0
+        for i in range(self.h):
+            trace += self[i][i]
+        
+        return trace
 
-dir="ltr">
+    def inverse(self):
+        """
+        Calculates the inverse of a 1x1 or 2x2 Matrix.
+        """
+        if not self.is_square():
+            print(ValueError, "Non-square Matrix does not have an inverse.")
+        if self.h > 2:
+            print(NotImplementedError, "inversion not implemented for matrices larger than 2x2.")
 
-<noscript>
-    <div id='noscript'>
-      Jupyter Notebook requires JavaScript.<br>
-      Please enable it to proceed. 
-  </div>
-</noscript>
+        # TODO - your code here
+        inverse = []
+        det = float(self.determinant())
+        
+        if self.h == 1:
+            inverse = [[1/det]]
+        elif self.h == 2:
+            inverse = [[0, 0],[0,0]]
+            a = self[0][0]
+            b = self[0][1]
+            c = self[1][0]
+            d = self[1][1]
+            inverse[0][0] = d/det
+            inverse[0][1] = -b/det
+            inverse[1][0] = -c/det
+            inverse[1][1] = a/det
+        else:
+            inverse = None
+        return Matrix(inverse)
 
-<div id="header">
-  <div id="header-container" class="container">
-  <div id="ipython_notebook" class="nav navbar-brand"><a href="/tree" title='dashboard'>
-      <img src='/static/base/images/logo.png?v=641991992878ee24c6f3826e81054a0f' alt='Jupyter Notebook'/>
-  </a></div>
+    def T(self):
+        """
+        Returns a transposed copy of this Matrix.
+        """
+        # TODO - your code here
+        matrix_transpose = []
+        for i in range(self.w):
+            row = []
+            for j in range(self.h):
+                row.append(self[j][i])
+            matrix_transpose.append(row)
+        return Matrix(matrix_transpose)
 
-  
+    def is_square(self):
+        return self.h == self.w
 
-<span id="save_widget" class="pull-left save_widget">
-    <span class="filename"></span>
-    <span class="last_modified"></span>
-</span>
+    #
+    # Begin Operator Overloading
+    ############################
+    def __getitem__(self,idx):
+        """
+        Defines the behavior of using square brackets [] on instances
+        of this class.
 
+        Example:
 
-  
-  
-  
-  
+        > my_matrix = Matrix([ [1, 2], [3, 4] ])
+        > my_matrix[0]
+          [1, 2]
 
-    <span id="login_widget">
-      
-    </span>
+        > my_matrix[0][0]
+          1
+        """
+        return self.g[idx]
 
-  
+    def __repr__(self):
+        """
+        Defines the behavior of calling print on an instance of this class.
+        """
+        s = ""
+        for row in self.g:
+            s += " ".join(["{} ".format(x) for x in row])
+            s += "\n"
+        return s
 
-  
-  
-  </div>
-  <div class="header-bar"></div>
+    def __add__(self,other):
+        """
+        Defines the behavior of the + operator
+        """
+        if self.h != other.h or self.w != other.w:
+            print(ValueError, "Matrices can only be added if the dimensions are the same") 
+        #   
+        # TODO - your code here
+        #
+        matrixSum = []
+        for i in range(self.h):
+            new_row = [] # empty row for now
+            for j in range(self.w):
+                new_row.append(self[i][j] + other[i][j])
+            matrixSum.append(new_row)
+        return Matrix(matrixSum)
 
-  
+    def __neg__(self):
+        """
+        Defines the behavior of - operator (NOT subtraction)
 
-<div id="menubar-container" class="container">
-  <div id="menubar">
-    <div id="menus" class="navbar navbar-default" role="navigation">
-      <div class="container-fluid">
-          <p  class="navbar-text indicator_area">
-          <span id="current-mode" >current mode</span>
-          </p>
-        <button type="button" class="btn btn-default navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <i class="fa fa-bars"></i>
-          <span class="navbar-text">Menu</span>
-        </button>
-        <ul class="nav navbar-nav navbar-right">
-          <li id="notification_area"></li>
-        </ul>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">File</a>
-              <ul id="file-menu" class="dropdown-menu">
-                <li id="new-file"><a href="#">New</a></li>
-                <li id="save-file"><a href="#">Save</a></li>
-                <li id="rename-file"><a href="#">Rename</a></li>
-                <li id="download-file"><a href="#">Download</a></li>
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Edit</a>
-              <ul id="edit-menu" class="dropdown-menu">
-                <li id="menu-find"><a href="#">Find</a></li>
-                <li id="menu-replace"><a href="#">Find &amp; Replace</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Key Map</li>
-                <li id="menu-keymap-default"><a href="#">Default<i class="fa"></i></a></li>
-                <li id="menu-keymap-sublime"><a href="#">Sublime Text<i class="fa"></i></a></li>
-                <li id="menu-keymap-vim"><a href="#">Vim<i class="fa"></i></a></li>
-                <li id="menu-keymap-emacs"><a href="#">emacs<i class="fa"></i></a></li>
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">View</a>
-              <ul id="view-menu" class="dropdown-menu">
-              <li id="toggle_header" title="Show/Hide the logo and notebook title (above menu bar)">
-              <a href="#">Toggle Header</a></li>
-              <li id="menu-line-numbers"><a href="#">Toggle Line Numbers</a></li>
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Language</a>
-              <ul id="mode-menu" class="dropdown-menu">
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        Example:
 
-<div class="lower-header-bar"></div>
+        > my_matrix = Matrix([ [1, 2], [3, 4] ])
+        > negative  = -my_matrix
+        > print(negative)
+          -1.0  -2.0
+          -3.0  -4.0
+        """
+        #   
+        # TODO - your code here
+        #
+        negative_Matrix = []
+        for i in range(self.h):
+            row = [] #clear contents of row
+            for j in range(self.w):
+                row.append(-self[i][j])
+            negative_Matrix.append(row)
+        return Matrix(negative_Matrix)
 
+    def __sub__(self, other):
+        """
+        Defines the behavior of - operator (as subtraction)
+        """
+        #   
+        # TODO - your code here
+        #
+        sum = self + (-other)
+        return sum
 
-</div>
+    def __mul__(self, other):
+        """
+        Defines the behavior of * operator (matrix multiplication)
+        """
+        #   
+        # TODO - your code here
+        #
+        product = []
+        for i in range(self.h):
+            row_result = []
+            for j in range(other.T().h):
+                row_result.append(dot_product(self.g[i],other.T().g[j]))
+            product.append(row_result)
+                
+        return Matrix(product)
 
-<div id="site">
+    def __rmul__(self, other):
+        """
+        Called when the thing on the left of the * is not a matrix.
 
+        Example:
 
-<div id="texteditor-backdrop">
-<div id="texteditor-container" class="container"></div>
-</div>
-
-
-</div>
-
-
-
-
-
-
-    
-
-
-<script src="/static/edit/js/main.min.js?v=69ef7b7a55de6f60611ff3ae94ef5069" type="text/javascript" charset="utf-8"></script>
-
-
-<script type='text/javascript'>
-  function _remove_token_from_url() {
-    if (window.location.search.length <= 1) {
-      return;
-    }
-    var search_parameters = window.location.search.slice(1).split('&');
-    for (var i = 0; i < search_parameters.length; i++) {
-      if (search_parameters[i].split('=')[0] === 'token') {
-        // remote token from search parameters
-        search_parameters.splice(i, 1);
-        var new_search = '';
-        if (search_parameters.length) {
-          new_search = '?' + search_parameters.join('&');
-        }
-        var new_url = window.location.origin + 
-                      window.location.pathname + 
-                      new_search + 
-                      window.location.hash;
-        window.history.replaceState({}, "", new_url);
-        return;
-      }
-    }
-  }
-  _remove_token_from_url();
-</script>
-</body>
-
-</html>
+        > identity = Matrix([ [1,0], [0,1] ])
+        > doubled  = 2 * identity
+        > print(doubled)
+          2.0  0.0
+          0.0  2.0
+        """
+        if isinstance(other, numbers.Number):
+            #   
+            # TODO - your code here
+            #
+            matrix = []
+            for i in range(self.h):
+                row = []
+                for j in range(self.w):
+                    row.append(other*self[i][j])
+                matrix.append(row)
+            return Matrix(matrix)
+            
