@@ -45,7 +45,6 @@ class Matrix(object):
         if self.h > 2:
             print(NotImplementedError, "Calculating determinant not implemented for matrices largerer than 2x2.")
         
-        # TODO - your code here
         if self.h == 1:
             return self[0][0]
         elif self.h == 2:
