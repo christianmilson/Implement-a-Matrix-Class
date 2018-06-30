@@ -78,7 +78,6 @@ class Matrix(object):
         if self.h > 2:
             print(NotImplementedError, "inversion not implemented for matrices larger than 2x2.")
 
-        # TODO - your code here
         inverse = []
         det = float(self.determinant())
         
@@ -176,9 +175,6 @@ class Matrix(object):
         """
         Defines the behavior of - operator (as subtraction)
         """
-        #   
-        # TODO - your code here
-        #
         sum = self + (-other)
         return sum
 
