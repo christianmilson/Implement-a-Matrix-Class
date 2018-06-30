@@ -103,7 +103,6 @@ class Matrix(object):
         """
         Returns a transposed copy of this Matrix.
         """
-        # TODO - your code here
         matrix_transpose = []
         for i in range(self.w):
             row = []
@@ -150,9 +149,6 @@ class Matrix(object):
         """
         if self.h != other.h or self.w != other.w:
             print(ValueError, "Matrices can only be added if the dimensions are the same") 
-        #   
-        # TODO - your code here
-        #
         grid = zeroes(self.h, self.w)
         for i in range(self.h):
             for j in range(self.w):
@@ -171,9 +167,6 @@ class Matrix(object):
           -1.0  -2.0
           -3.0  -4.0
         """
-        #   
-        # TODO - your code here
-        #
         grid = zeroes(self.h, self.w)
         for r in range(self.h):
             for c in range(self.w):
@@ -194,9 +187,6 @@ class Matrix(object):
         """
         Defines the behavior of * operator (matrix multiplication)
         """
-        #   
-        # TODO - your code here
-        #
         product = []
         for i in range(self.h):
             row_result = []
@@ -219,9 +209,6 @@ class Matrix(object):
           0.0  2.0
         """
         if isinstance(other, numbers.Number):
-            #   
-            # TODO - your code here
-            #
             temp = [[other * self.g[i][j] for j in range(self.w)] for i in range(self.h)]
             return Matrix(temp)
             
